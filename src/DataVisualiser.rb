@@ -1,6 +1,9 @@
 require_relative 'Tweet'
+require 'erb'
 
 module DataVisualiser
+  @@SYMBOL_CHARS_REGEX = /[^a-zA-Z0-9]/
+
   def generate_word_cloud(words_hash)
   end
 
@@ -30,7 +33,31 @@ module DataVisualiser
     return generate_GET_request(params)
   end
 
-  def generate_pie_chart(chars_hash)
+  def self.generate_pie_chart(chars_hash)
+    params = {
+      'chd'   => 'a:', # incomplete, append actual data
+      'chco'  => 'ff3030', # chart color, from dark red to light red
+      'chs'   => '999x999', # chart size
+      'cht'   => 'p3', # chart type (pie)
+      'chtt'  => 'Symbol distribution', # chart title
+      'chdl'  => '', # incomplete, legend for each pie part (separated by |)
+    }
+
+    # create new hash, only add in symbols
+    symbol_hash = Hash.new
+
+    for char, count in chars_hash do
+      # if char matches regex pattern
+      symbol_hash[ERB::Util.url_encode(char)] = count if char =~ @@SYMBOL_CHARS_REGEX
+    end
+
+    # format data (chd)
+    params['chd'] << symbol_hash.values.join(',')
+
+    # format legends (chdl) and labels (chl)
+    params['chdl'] << symbol_hash.keys.join('|')
+
+    return generate_GET_request(params)
   end
 
   private
