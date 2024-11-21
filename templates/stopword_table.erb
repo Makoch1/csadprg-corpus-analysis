@@ -1,0 +1,26 @@
+<div>
+  <div>
+    <p class="label-large">
+      <%= title %>
+    </p>
+  </div>
+  <table class="table">
+    <thead class="table-head">
+      <tr>
+        <th class="table-header">Index</th>
+        <th class="table-header">
+          <%= header %>
+        </th>
+    </thead>
+    <% frequency_hash.each_with_index do |(key, _), index| %>
+      <tr>
+        <td class="table-cell table-cell-light">
+          <%= index + 1 %>
+        </td>
+        <td class="table-cell">
+          <%= key %>
+        </td>
+      </tr>
+      <% end %>
+  </table>
+</div>

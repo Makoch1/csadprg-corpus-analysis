@@ -1,0 +1,24 @@
+<html>
+
+<head>
+  <link rel='stylesheet' href='../static/main.css'>
+</head>
+
+<body>
+  <div id="root">
+    <div class="half-container">
+      <%= counts %>
+        <div class='frequency-table-container'>
+          <%= word_freq_table %>
+            <%= char_freq_table %>
+              <%= top20_word_table %>
+                <%= stop_word_table %>
+        </div>
+    </div>
+    <div class="half-container">
+      <%= graphs %>
+    </div>
+  </div>
+</body>
+
+</html>
