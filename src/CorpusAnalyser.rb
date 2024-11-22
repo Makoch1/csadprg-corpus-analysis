@@ -1,3 +1,5 @@
+require_relative("./FileLoader")
+
 class CorpusAnalyser
   @@CHARS_TO_EXCLUDE = /[^A-z^\s]/
   attr_reader :words
@@ -41,38 +43,20 @@ class CorpusAnalyser
     return sorted
   end
 
-  # To identify the top 10 stop words, each word's IDF was calculated and ranked.
-  # IDF = log (N / dt) where:
-  #   N   is the total number of documents (tweets in this case)
-  #   dt  is the number of documents (tweets) that contain the term t
   def get_stop_words
-    idf_ranking = Hash.new
+    # load stop word bag
+    stop_words_bag = FileLoader.load_stop_words
 
-    # for each unique word
-    unique_words.each do |word, _|
-      dt = 0
-
-      # check how many tweets the unique word appears in
-      @tweets.each do |tweet|
-        # process the tweet first, split into an array of words
-        tweet_array = tweet.gsub(/[^A-z0-9^\s]/, "").downcase.split(" ")
-
-        if tweet_array.include? word
-          dt += 1
-        end
-      end
-
-      # calculate the IDF
-      if dt != 0
-        idf_ranking[word] = Math.log(@tweets.size / dt, 2)
-      else
-        idf_ranking[word] = 0
+    stop_words = Hash.new
+    for word in stop_words_bag do
+      if unique_words.has_key?(word)
+        stop_words[word] = unique_words[word] # copy the frequency from unique words
       end
     end
 
-    # sort and get the first 10
-    return idf_ranking
-      .sort_by {|_, v| v}[...10] # array slicing
+    return stop_words
+      .sort_by {|_, v| v}
+      .reverse[...10]
       .to_h
   end
 

@@ -4,9 +4,8 @@ require_relative 'FileLoader'
 require_relative 'Tweet'
 require 'erb'
 
-def main()
-  # -- TODO: get file name from user
-  fl = FileLoader.new("./fake_tweets.csv")
+def main(filepath)
+  fl = FileLoader.new(filepath)
   ca = CorpusAnalyser.new(fl.tweet_texts)
 
   # -- Build html using templates
@@ -73,6 +72,19 @@ def main()
   File.open('result.html', 'w+') do |f|
     f.write results_html
   end
+
+  puts "Results are in: #{File.expand_path('./result.html')}"
 end
 
-main()
+# check filename arg
+if ARGV.length != 1
+  Kernel.abort "csv filepath arg missing!\n Usage: ruby Main.rb <filepath>"
+end
+
+# check if filepath is actually a path
+filepath = ARGV[0]
+unless File.file?(filepath)
+  Kernel.abort "filepath supplied does not exist!"
+end
+
+main(filepath)
