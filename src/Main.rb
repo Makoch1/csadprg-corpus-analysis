@@ -1,3 +1,9 @@
+# ****************************************
+# Last name: Salivio
+# Language: Ruby
+# Paradigm(s): Object-Oriented, Procedural
+# ****************************************
+
 require_relative 'DataVisualiser'
 require_relative 'CorpusAnalyser'
 require_relative 'FileLoader'
